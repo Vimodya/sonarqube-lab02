@@ -1,47 +1,42 @@
-package main.java.com.example;
+package com.example;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class UserService {
 
-    // SECURITY ISSUE: Hardcoded credentials (intentional for lab)
-    private String password = "admin123";
+    // Better: no hardcoded password (for demo only)
+    private String password = System.getenv("DB_PASSWORD");
 
-    // VULNERABILITY: SQL Injection (intentional)
     public void findUser(String username) throws Exception {
-        Connection conn =
-            DriverManager.getConnection(
-                "jdbc:mysql://localhost/db",
-                "root",
-                password
-            );
+        String query = "SELECT * FROM users WHERE name = ?";
 
-        Statement st = conn.createStatement();
-        String query =
-            "SELECT * FROM users WHERE name = '" + username + "'";
-        st.executeQuery(query);
+        try (Connection conn =
+                 DriverManager.getConnection(
+                     "jdbc:mysql://localhost/db",
+                     "root",
+                     password);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, username);
+            ps.executeQuery();
+        }
     }
 
-    // SMELL: Unused method (intentional)
-    public void notUsed() {
-        System.out.println("I am never called");
-    }
-
-    // VULNERABILITY + RESOURCE LEAK (intentional)
     public void deleteUser(String username) throws Exception {
-        // Sonar will complain: should use try-with-resources
-        Connection conn =
-            DriverManager.getConnection(
-                "jdbc:mysql://localhost/db",
-                "root",
-                password
-            );
+        String query = "DELETE FROM users WHERE name = ?";
 
-        Statement st = conn.createStatement();
-        String query =
-            "DELETE FROM users WHERE name = '" + username + "'";
-        st.execute(query);
+        try (Connection conn =
+                 DriverManager.getConnection(
+                     "jdbc:mysql://localhost/db",
+                     "root",
+                     password);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, username);
+            ps.execute();
+        }
     }
 }
