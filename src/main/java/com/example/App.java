@@ -11,10 +11,13 @@ public class App {
         logger.info(String.valueOf(calc.calculate(10, 5, "add-again")));
 
         UserService service = new UserService();
-        service.findUser("admin");
+
+        String username = "admin";
+
         if (username != null && !username.isEmpty()) {
             service.findUser(username);
             service.deleteUser(username);
         }
     }
 }
+
