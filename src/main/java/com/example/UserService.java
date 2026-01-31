@@ -3,15 +3,14 @@ package main.java.com.example;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class UserService {
 
-    // Better: no hardcoded password (for demo only)
     private String password = System.getenv("DB_PASSWORD");
 
-    public void findUser(String username) throws Exception {
-        String query = "SELECT * FROM users WHERE name = ?";
+    public void findUser(String username) throws SQLException {
+        String query = "SELECT id, name FROM users WHERE name = ?";
 
         try (Connection conn =
                  DriverManager.getConnection(
@@ -25,7 +24,7 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String username) throws Exception {
+    public void deleteUser(String username) throws SQLException {
         String query = "DELETE FROM users WHERE name = ?";
 
         try (Connection conn =
