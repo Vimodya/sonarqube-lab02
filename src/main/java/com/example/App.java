@@ -12,6 +12,9 @@ public class App {
 
         UserService service = new UserService();
         service.findUser("admin");
-        service.deleteUser("admin");
+        if (username != null && !username.isEmpty()) {
+            service.findUser(username);
+            service.deleteUser(username);
+        }
     }
 }
