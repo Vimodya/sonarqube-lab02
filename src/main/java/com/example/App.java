@@ -1,5 +1,4 @@
 package main.java.com.example;
-
 import java.util.logging.Logger;
 
 public class App {
@@ -12,12 +11,10 @@ public class App {
 
         UserService service = new UserService();
 
-        String username = "admin";
-
-        if (username != null && !username.isEmpty()) {
+        if (args.length > 0) {
+            String username = args[0];
             service.findUser(username);
             service.deleteUser(username);
         }
     }
 }
-
